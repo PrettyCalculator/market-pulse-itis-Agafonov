@@ -15,15 +15,6 @@ import academy.backend.market_pulse.model.Instrument;
 import academy.backend.market_pulse.model.Quote;
 import academy.backend.market_pulse.repository.store.QuoteFileStore;
 
-/**
- * Хранит котировки в текстовом файле: одна котировка — одна строка, поля через {@code ;}:
- * <pre>
- * тип;тикер;валюта;цена;изменение;название
- * STOCK;SBER;RUB;250.00;1.20;Сбер
- * </pre>
- * Название стоит последним, потому что только в нём может встретиться {@code ;} — строка делится
- * максимум на 6 частей, и всё, что после пятого разделителя, целиком считается названием.
- */
 public class QuoteFileStoreSkeleton implements QuoteFileStore {
 
     private static final String SEPARATOR = ";";
@@ -49,7 +40,6 @@ public class QuoteFileStoreSkeleton implements QuoteFileStore {
     @Override
     public List<Quote> load(Path path) {
         List<Quote> quotes = new ArrayList<>();
-        // Первый запуск — файла ещё нет, это нормально
         if (!Files.exists(path)) {
             return quotes;
         }

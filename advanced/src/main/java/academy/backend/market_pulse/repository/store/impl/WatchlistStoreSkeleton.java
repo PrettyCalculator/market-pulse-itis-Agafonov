@@ -12,11 +12,6 @@ import java.util.Set;
 
 import academy.backend.market_pulse.repository.store.WatchlistStore;
 
-/**
- * Хранит watchlist в обычном текстовом файле: один тикер на строку. Строки пишутся в том порядке,
- * в котором тикеры лежат в наборе, а при чтении складываются в {@link LinkedHashSet} — поэтому
- * порядок добавления сохраняется.
- */
 public class WatchlistStoreSkeleton implements WatchlistStore {
 
     @Override
@@ -33,7 +28,6 @@ public class WatchlistStoreSkeleton implements WatchlistStore {
     @Override
     public Set<String> load(Path path) {
         Set<String> tickers = new LinkedHashSet<>();
-        // Первый запуск — файла ещё нет, это нормально
         if (!Files.exists(path)) {
             return tickers;
         }

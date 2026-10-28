@@ -16,16 +16,6 @@ import java.util.stream.Stream;
 import academy.backend.market_pulse.history.PriceHistoryStore;
 import academy.backend.market_pulse.history.PricePoint;
 
-/**
- * Хранит историю цен: на каждую точку — отдельный маленький текстовый файл. Файлы одного тикера
- * лежат в своей подпапке, имя файла — время точки в миллисекундах:
- * <pre>
- * directory/SBER/1000.txt   содержимое: SBER;1970-01-01T00:00:01Z;250.00
- * directory/SBER/2000.txt   содержимое: SBER;1970-01-01T00:00:02Z;251.50
- * </pre>
- * Если файл с таким именем уже есть (две точки в одну миллисекунду), к имени добавляется
- * номер: {@code 2000_1.txt}, {@code 2000_2.txt} — старый файл не перезаписывается.
- */
 public class PriceHistoryStoreSkeleton implements PriceHistoryStore {
 
     private static final String SEPARATOR = ";";
@@ -40,7 +30,6 @@ public class PriceHistoryStoreSkeleton implements PriceHistoryStore {
         try {
             Files.createDirectories(tickerDirectory);
             Path file = findFreeFileName(tickerDirectory, point.timestamp());
-            // CREATE_NEW — если файл вдруг уже есть, будет ошибка, а не перезапись
             Files.writeString(file, content, StandardCharsets.UTF_8, StandardOpenOption.CREATE_NEW);
             return file;
         } catch (IOException e) {
@@ -52,7 +41,6 @@ public class PriceHistoryStoreSkeleton implements PriceHistoryStore {
     public List<PricePoint> load(Path directory, String ticker) {
         List<PricePoint> points = new ArrayList<>();
         Path tickerDirectory = directory.resolve(ticker);
-        // Для тикера ещё ничего не сохраняли — папки нет
         if (!Files.isDirectory(tickerDirectory)) {
             return points;
         }
@@ -66,7 +54,6 @@ public class PriceHistoryStoreSkeleton implements PriceHistoryStore {
         } catch (IOException e) {
             throw new UncheckedIOException("Не удалось прочитать историю для " + ticker, e);
         }
-        // Files.list не гарантирует порядок, поэтому сортируем по времени сами
         points.sort(Comparator.comparing(PricePoint::timestamp));
         return points;
     }

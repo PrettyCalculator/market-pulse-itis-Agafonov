@@ -15,7 +15,6 @@ import academy.backend.market_pulse.model.Instrument;
 import academy.backend.market_pulse.model.Quote;
 import academy.backend.market_pulse.repository.store.impl.QuoteFileStoreSkeleton;
 
-/** Проверка моей реализации котировок общим контрактным тестом + пара своих проверок. */
 class QuoteFileStoreSkeletonTest extends QuoteFileStoreContractTest {
 
     @Override
@@ -23,8 +22,6 @@ class QuoteFileStoreSkeletonTest extends QuoteFileStoreContractTest {
         return new QuoteFileStoreSkeleton();
     }
 
-    // В требованиях сказано, что название и изменение тоже должны сохраняться,
-    // а контрактный тест их не проверяет — проверяю сам. В названии специально есть ";".
     @Test
     void nameAndChangePercentAreSaved(@TempDir Path tempDir) {
         QuoteFileStore store = createStore();
